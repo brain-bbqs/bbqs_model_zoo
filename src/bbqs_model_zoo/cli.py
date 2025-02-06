@@ -1,17 +1,20 @@
-"""This module defines CLI commands for the PipePal application."""
-
 import click
 
-from .app import hello_world as hw_function  # Renamed to avoid conflict
+from commands import fit, init, ls, predict, preprocess
 
 
 @click.group()
 def main() -> None:
-    """Define the main CLI group."""
-    pass
+    """A collection of neuroimaging deep learning models."""
+    return
 
 
-@main.command()
-def hello_world() -> None:
-    """Execute the hello_world command from the app module."""
-    hw_function()
+main.add_command(init)
+main.add_command(ls)
+main.add_command(fit)
+main.add_command(predict)
+main.add_command(preprocess)
+
+# for debugging purposes
+if __name__ == "__main__":
+    main()
