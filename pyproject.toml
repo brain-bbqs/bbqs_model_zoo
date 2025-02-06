@@ -23,7 +23,7 @@ repository = "https://github.com/brain-bbqs/bbqs_model_zoo"
 documentation = "https://brain-bbqs.org/bbqs_model_zoo"
 
 [project.scripts]
-bbqs_model_zoo-cli = "bbqs_model_zoo.cli:main"
+bbqs-zoo = "bbqs_model_zoo.cli:main"
 
 [tool.poetry]
 classifiers = [
