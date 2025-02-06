@@ -1,7 +1,8 @@
+"""List available models."""
 import click
 
 
 @click.command()
 def ls() -> None:
-    """list available models"""
+    """List available models."""
     pass

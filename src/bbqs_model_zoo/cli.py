@@ -1,3 +1,4 @@
+"""Commandline interface for the bbqs_model_zoo package."""
 import click
 
 from commands import fit, init, ls, predict, preprocess
@@ -15,6 +16,5 @@ main.add_command(fit)
 main.add_command(predict)
 main.add_command(preprocess)
 
-# for debugging purposes
 if __name__ == "__main__":
     main()

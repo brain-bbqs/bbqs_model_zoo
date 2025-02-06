@@ -1,7 +1,8 @@
+"""Get the prediction from the model."""
 import click
 
 
 @click.command()
-def predict():
-    """get the prediction from the model"""
+def predict() -> None:
+    """Get the prediction from the model."""
     pass

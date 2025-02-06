@@ -1,5 +1,7 @@
-from .fit import fit
-from .init import init
-from .ls import ls
-from .predict import predict
-from .preprocess import preprocess
+"""Commands for the commandline interface."""
+
+from .fit import fit as fit
+from .init import init as init
+from .ls import ls as ls
+from .predict import predict as predict
+from .preprocess import preprocess as preprocess

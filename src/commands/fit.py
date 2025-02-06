@@ -1,7 +1,8 @@
+"""Fit a model."""
 import click
 
 
 @click.command()
 def fit() -> None:
-    """fit a model."""
+    """Fit a model."""
     return
