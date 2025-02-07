@@ -9,6 +9,15 @@ from bbqs_model_zoo.helper import OptionEatAll as OptionEatAll
 _option_kwds = {"show_default": True}
 
 
+def get_hf_datasets() -> list:
+    """Collect Hugging Face datasets."""
+    api = HfApi()
+    hf_datasets = api.list_datasets(author="mwmathis")
+    hf_datasets = [f"hf/{dataset.id}" for dataset in hf_datasets]
+
+    return hf_datasets
+
+
 def get_hf_models() -> list:
     """Collect Hugging Face models."""
     api = HfApi()
@@ -40,6 +49,7 @@ def get_custom_models() -> list:
 
 
 @click.command()
+@click.argument("type")
 @click.option("--all", is_flag=True, help="List all models.")
 @click.option(
     "--tool",
@@ -48,36 +58,43 @@ def get_custom_models() -> list:
     help="tool name. {hf/dlc/custom}",
     **_option_kwds,
 )
-def ls(all: bool, tool: str) -> None:
+def ls(type: str, all: bool, tool: str, **kwrg: dict) -> None:
     """List available models.
 
     Examples:
-        bbqs-zoo-cli ls --all
-        bbqs-zoo-cli ls --tool dlc
-        bbqs-zoo-cli ls --tool dlc --tool hf ...
+        bbqs-zoo-cli ls datasets --all
+        bbqs-zoo-cli ls models --all
+        bbqs-zoo-cli ls models --tool dlc
+        bbqs-zoo-cli ls models --tool dlc --tool hf ...
     """
-    if all:
-        tool = ["dlc", "hf", "custom"]
+    if type == "datasets":
+        for dataset in get_hf_datasets():
+            click.echo(dataset)
+        return
 
-    func_dict = {
-        **dict.fromkeys(
-            [
-                "dlc",
-                "deeplabcut",
-            ],
-            get_dlc_models,
-        ),
-        **dict.fromkeys(
-            ["hf", "huggingface", "hugging_face", "hugging-face"], get_hf_models
-        ),
-        **dict.fromkeys(
-            [
-                "custom",
-            ],
-            get_custom_models,
-        ),
-    }
+    if type == "models":
+        if all:
+            tool = ["dlc", "hf", "custom"]
 
-    for item in tool:
-        for model in func_dict[item]():
-            click.echo(model)
+        func_dict = {
+            **dict.fromkeys(
+                [
+                    "dlc",
+                    "deeplabcut",
+                ],
+                get_dlc_models,
+            ),
+            **dict.fromkeys(
+                ["hf", "huggingface", "hugging_face", "hugging-face"], get_hf_models
+            ),
+            **dict.fromkeys(
+                [
+                    "custom",
+                ],
+                get_custom_models,
+            ),
+        }
+
+        for item in tool:
+            for model in func_dict[item]():
+                click.echo(model)
