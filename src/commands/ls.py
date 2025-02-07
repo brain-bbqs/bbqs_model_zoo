@@ -35,7 +35,7 @@ def get_dlc_models() -> list:
 def get_custom_models() -> list:
     """Collect custom models."""
     custom_models = []
-
+    print("Custom models are not available yet.")
     return custom_models
 
 @click.command()
@@ -56,13 +56,7 @@ def ls(all: bool, tool: str) -> None:
         bbqs-zoo-cli ls --tool dlc --tool hf ...
     """
     if all:
-        hf_models = get_hf_models()
-        dlc_models = get_dlc_models()
-        custom_models = get_custom_models()
-        models = hf_models + dlc_models + custom_models
-
-        for item in models:
-            click.echo(item)
+        tool = ["dlc", "hf", "custom"]
 
     for item in tool:
         if item in ["dlc", "deeplabcut"]:
