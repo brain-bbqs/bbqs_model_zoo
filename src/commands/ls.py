@@ -32,13 +32,19 @@ def get_dlc_models() -> list:
     return dlc_models
 
 
+def get_custom_models() -> list:
+    """Collect custom models."""
+    custom_models = []
+
+    return custom_models
+
 @click.command()
 @click.option("--all", is_flag=True, help="List all models.")
 @click.option(
     "--tool",
     type=str,
     multiple=True,
-    help="tool name. should be in the form of <org>/<model>/<version>",
+    help="tool name. {hf/dlc/custom}",
     **_option_kwds,
 )
 def ls(all: bool, tool: str) -> None:
@@ -52,7 +58,8 @@ def ls(all: bool, tool: str) -> None:
     if all:
         hf_models = get_hf_models()
         dlc_models = get_dlc_models()
-        models = hf_models + dlc_models
+        custom_models = get_custom_models()
+        models = hf_models + dlc_models + custom_models
 
         for item in models:
             click.echo(item)
@@ -67,3 +74,8 @@ def ls(all: bool, tool: str) -> None:
             hf_models = get_hf_models()
             for hf_model in hf_models:
                 click.echo(hf_model)
+
+        if item in ["custom"]:
+            custom_models = get_custom_models()
+            for custom_model in custom_models:
+                click.echo(custom_model)
