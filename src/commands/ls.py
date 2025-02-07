@@ -38,6 +38,7 @@ def get_custom_models() -> list:
     print("Custom models are not available yet.")
     return custom_models
 
+
 @click.command()
 @click.option("--all", is_flag=True, help="List all models.")
 @click.option(
@@ -58,18 +59,25 @@ def ls(all: bool, tool: str) -> None:
     if all:
         tool = ["dlc", "hf", "custom"]
 
+    func_dict = {
+        **dict.fromkeys(
+            [
+                "dlc",
+                "deeplabcut",
+            ],
+            get_dlc_models,
+        ),
+        **dict.fromkeys(
+            ["hf", "huggingface", "hugging_face", "hugging-face"], get_hf_models
+        ),
+        **dict.fromkeys(
+            [
+                "custom",
+            ],
+            get_custom_models,
+        ),
+    }
+
     for item in tool:
-        if item in ["dlc", "deeplabcut"]:
-            dlc_models = get_dlc_models()
-            for dlc_model in dlc_models:
-                click.echo(dlc_model)
-
-        if item in ["hf", "huggingface", "hugging_face", "hugging-face"]:
-            hf_models = get_hf_models()
-            for hf_model in hf_models:
-                click.echo(hf_model)
-
-        if item in ["custom"]:
-            custom_models = get_custom_models()
-            for custom_model in custom_models:
-                click.echo(custom_model)
+        for model in func_dict[item]():
+            click.echo(model)
