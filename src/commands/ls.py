@@ -52,9 +52,9 @@ def ls(all: bool, tool: str) -> None:
     """List available models.
 
     Examples:
-        bbqs-zoo-cli ls --all
-        bbqs-zoo-cli ls --tool dlc
-        bbqs-zoo-cli ls --tool dlc --tool hf ...
+        bbqs-zoo ls --all
+        bbqs-zoo ls --tool dlc
+        bbqs-zoo ls --tool dlc --tool hf ...
     """
     if all:
         tool = ["dlc", "hf", "custom"]

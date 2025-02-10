@@ -9,7 +9,7 @@ import click
 from commands import fit, init, ls, predict, preprocess
 
 
-@click.group("bbqs-zoo-cli")
+@click.group("bbqs-zoo")
 def cli() -> None:
     """A collection of neuroimaging deep learning models."""
     return
@@ -22,7 +22,7 @@ cli.add_command(predict)
 cli.add_command(preprocess)
 
 def main():
-   cli(prog_name="bbqs-zoo-cli")
+   cli(prog_name="bbqs-zoo")
 
 if __name__ == "__main__":
     main()
