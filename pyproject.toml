@@ -12,10 +12,10 @@ maintainers = [
   { name = "Satrajit Ghosh", email = "satra@mit.edu" },
 ]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.10.0,<3.13.0"
 license = "Apache-2.0"
 dynamic = ["classifiers"]
-dependencies = ["click~=8.1.7", "huggingface-hub (>=0.28.1,<0.29.0)", "dlclibrary (>=0.0.7,<0.0.8)"]
+dependencies = ["click~=8.1.7", "huggingface-hub (>=0.28.1,<0.29.0)", "dlclibrary (>=0.0.7,<0.0.8)", "typing-extensions (==4.12.2)"]
 
 [project.urls]
 homepage = "https://github.com/brain-bbqs/bbqs_model_zoo"
@@ -36,6 +36,7 @@ packages = [{ include = "bbqs_model_zoo", from = "src" }]
 
 [tool.poetry.group.dev]
 optional = true
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
 mypy = "^1.9.0"
