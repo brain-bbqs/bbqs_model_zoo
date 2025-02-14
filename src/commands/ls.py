@@ -3,6 +3,7 @@
 import click
 import dlclibrary as dlclib
 from huggingface_hub import HfApi
+import requests
 
 from bbqs_model_zoo.helper import OptionEatAll as OptionEatAll
 
@@ -40,6 +41,7 @@ def get_hf_datasets() -> list:
 
     return hf_datasets
 
+
 def get_custom_datasets() -> list:
     """Collect custom datasets."""
     custom_models = []
@@ -53,6 +55,7 @@ def get_custom_datasets() -> list:
                         custom_models.append(f"custom/{folder.name}/{file.name}")
 
     return custom_models
+  
 
 def get_hf_models() -> list:
     """Collect Hugging Face models."""
@@ -75,12 +78,12 @@ def get_dlc_models() -> list:
 
     return dlc_models
 
-
 def get_custom_models() -> list:
     """Collect custom models."""
     custom_models = []
     print("Custom models are not available yet.")
     return custom_models
+
 
 def get_available(tool: str, category: str) -> list:
     """Helper to get models and datasets"""
