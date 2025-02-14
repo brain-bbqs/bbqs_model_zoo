@@ -7,14 +7,20 @@ import requests
 
 from bbqs_model_zoo.helper import OptionEatAll as OptionEatAll
 
+from pathlib import Path
+
+import requests
+
 _option_kwds = {"show_default": True}
+
+CUSTOM_DATA_DIR = "custom_data"
 
 def get_zenodo_datasets(q: str) -> list:
     """Collect Zenodo datasets"""
     url = f"https://zenodo.org/api/records/?q={q}"
     response = requests.get(url)
     data = response.json()
-    zenodo_datasets = [f"zenodo/{dataset['metadata']['title'].replace(' ', '_')}" for dataset in data["hits"]["hits"]]
+    zenodo_datasets = [f"dlc/{dataset['metadata']['title'].replace(' ', '_')}" for dataset in data["hits"]["hits"]]
 
     return zenodo_datasets
 
@@ -35,6 +41,22 @@ def get_hf_datasets() -> list:
 
     return hf_datasets
 
+
+def get_custom_datasets() -> list:
+    """Collect custom datasets."""
+    custom_models = []
+    base_path = Path(__file__).resolve().parent.parent / CUSTOM_DATA_DIR  # Navigate to project root
+
+    if base_path.exists():
+        for folder in base_path.iterdir():
+            if folder.is_dir():
+                for file in folder.iterdir():
+                    if file.is_file():
+                        custom_models.append(f"custom/{folder.name}/{file.name}")
+
+    return custom_models
+  
+
 def get_hf_models() -> list:
     """Collect Hugging Face models."""
     api = HfApi()
@@ -42,7 +64,6 @@ def get_hf_models() -> list:
     hf_models = [f"hf/{model.modelId}" for model in hf_models]
 
     return hf_models
-
 
 def get_dlc_models() -> list:
     """Collect DeepLabCut models."""
@@ -63,32 +84,10 @@ def get_custom_models() -> list:
     print("Custom models are not available yet.")
     return custom_models
 
-def get_custom_datasets() -> list:
-    """Collect custom datasets."""
-    custom_datasets = []
-    print("Custom datasets are not available yet.")
-    return custom_datasets
 
+def get_available(tool: str, category: str) -> list:
+    """Helper to get models and datasets"""
 
-@click.command()
-@click.argument("category")
-@click.option("--all", is_flag=True, default=False, help="List all models.")
-@click.option(
-    "--tool",
-    type=str,
-    multiple=True,
-    help="tool name. {hf/dlc/custom}",
-    **_option_kwds,
-)
-def ls(category: str, all: bool, tool: tuple, **kwrg: dict) -> None:
-    """List available models.
-
-    Examples:
-        bbqs-zoo-cli ls datasets --all
-        bbqs-zoo-cli ls models --all
-        bbqs-zoo-cli ls models --tool dlc
-        bbqs-zoo-cli ls models --tool dlc --tool hf ...
-    """
     func_dict = {
             **dict.fromkeys(
                 [
@@ -107,15 +106,33 @@ def ls(category: str, all: bool, tool: tuple, **kwrg: dict) -> None:
                 {"models": get_custom_models, "datasets": get_custom_datasets}
             ),
         }
+    if tool in func_dict:
+        return [item for item in func_dict[tool][category]()]
+    else:
+        []
 
-    if category == "datasets":
-        if all:
-            tool = ["dlc", "hf", "custom"]
+@click.command()
+@click.argument("category")
+@click.option("--all", is_flag=True, default=False, help="List all of specified category.")
+@click.option(
+    "--tool",
+    type=str,
+    multiple=True,
+    help="tool name. {hf/dlc/custom}",
+    **_option_kwds,
+)
+def ls(category: str, all: bool, tool: tuple, **kwrg: dict) -> None:
+    """List available models or datasets.
+    Examples:
+        bbqs-zoo-cli ls datasets --all
+        bbqs-zoo-cli ls models --all
+        bbqs-zoo-cli ls models --tool dlc
+        bbqs-zoo-cli ls models --tool dlc --tool hf ...
+    """
 
-    if category == "models":
-        if all:
-            tool = ["dlc", "hf", "custom"] 
+    if all:
+        tool = ["dlc", "hf", "custom"]
 
     for item in tool:
-        for model in func_dict[item][category]():
-            click.echo(model)
+        for obj in get_available(item, category):
+            click.echo(obj)
