@@ -1,20 +1,28 @@
-"""Commandline interface for the bbqs_model_zoo package."""
+"""Commandline interface for the bbqs_model_zoo package.
+
+Examples:
+    bbqs-zoo --help
+
+"""
 import click
 
 from commands import fit, init, ls, predict, preprocess
 
 
-@click.group()
-def main() -> None:
+@click.group("bbqs-zoo")
+def cli() -> None:
     """A collection of neuroimaging deep learning models."""
     return
 
 
-main.add_command(init)
-main.add_command(ls)
-main.add_command(fit)
-main.add_command(predict)
-main.add_command(preprocess)
+cli.add_command(init)
+cli.add_command(ls)
+cli.add_command(fit)
+cli.add_command(predict)
+cli.add_command(preprocess)
+
+def main():
+   cli(prog_name="bbqs-zoo")
 
 if __name__ == "__main__":
     main()
